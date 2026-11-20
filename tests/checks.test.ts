@@ -1,0 +1,17 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {contentChecks,headerChecks,previewChecks,policyCheck,score,check} from '../lib/checks';
+import {normalizeTarget,publicAddress} from '../lib/network';
+import {hash,owns} from '../lib/auth';
+import {demo} from '../lib/demo';
+import {summary} from '../lib/types';
+test('content ignores scripts but detects unfinished visible copy',()=>{assert.equal(contentChecks('<title>Launchcheck</title><body>coming soon</body>')[0].pass,false);assert.equal(contentChecks('<title>Launchcheck</title><body>Ready<script>coming soon</script></body>')[0].pass,true);});
+test('title is required',()=>assert.equal(contentChecks('<body>Ready</body>')[1].pass,false));
+test('headers fail closed and accept restrictive values',()=>{assert.ok(headerChecks({}).every(c=>!c.pass));assert.ok(headerChecks({'Content-Security-Policy':"default-src 'self'; object-src 'none'; frame-ancestors 'none'",'Strict-Transport-Security':'max-age=31536000','X-Content-Type-Options':'nosniff'}).every(c=>c.pass));assert.equal(headerChecks({'content-security-policy':"default-src *; object-src 'none'"})[0].pass,false);});
+test('social metadata needs title, description and a fetched image',()=>{const html='<meta property="og:title" content="Launchcheck"><meta property="og:description" content="Launch ready">';assert.ok(previewChecks(html,true).every(c=>c.pass));assert.equal(previewChecks(html,false)[1].pass,false);assert.equal(previewChecks('',true)[0].pass,false);});
+test('policies require a successful substantive page',()=>{assert.equal(policyCheck('privacy',false,'Unreachable').pass,false);assert.equal(policyCheck('terms',true,'Reachable').pass,true);});
+test('weighted score is bounded with defined empty case',()=>{assert.equal(score([]),0);assert.equal(score([check('a','x','a',true,'','',20),check('b','x','b',false,'','',80)]),20);assert.equal(score(demo.checks),55);assert.equal(demo.checks.filter(c=>!c.pass).length,3);});
+test('private, loopback, mapped and metadata addresses are blocked',()=>{for(const ip of ['127.0.0.1','10.0.0.2','172.16.0.1','192.168.1.1','169.254.169.254','0.0.0.0','::1','::ffff:127.0.0.1','fc00::1','fe80::1','100.64.0.1'])assert.equal(publicAddress(ip),false,ip);assert.equal(publicAddress('1.1.1.1'),true);});
+test('URL normalization rejects ambiguous and credential-bearing targets',()=>{for(const input of ['http://wikipedia.org','https://user:pass@wikipedia.org','https://wikipedia.org:8080','https://localhost','https://127.1','https://wikipedia.org/?private=1','https://github.com/a/b/tree/main'])assert.throws(()=>normalizeTarget(input));assert.equal(normalizeTarget('wikipedia.org').kind,'url');assert.equal(normalizeTarget('https://github.com/vercel/next.js').kind,'repo');});
+test('ownership cannot be inferred from a report ID',()=>{const scan={...demo,ownerHash:hash('correct-capability')};assert.equal(owns(scan,'wrong-capability'),false);assert.equal(owns(scan,'correct-capability'),true);assert.equal(owns(scan),false);});
+test('public serialization never exposes evidence or ownership',()=>{const json=JSON.stringify(summary(demo));assert.equal(json.includes('ownerHash'),false);assert.equal(json.includes('evidence'),false);assert.equal(json.includes('fix'),false);assert.equal(json.includes('paid'),false);});

@@ -1,0 +1,15 @@
+import Link from 'next/link';
+import {cookies} from 'next/headers';
+import {notFound} from 'next/navigation';
+import {demo} from '@/lib/demo';
+import {getScan} from '@/lib/store';
+import {cookieName,owns,validId} from '@/lib/auth';
+import {paymentsReady,stripe,fulfill} from '@/lib/payments';
+import {Checkout} from '@/components/checkout';
+export const metadata={title:'Full report',robots:{index:false,follow:false}};
+export default async function Full({params,searchParams}:{params:Promise<{id:string}>;searchParams:Promise<{session_id?:string;cancelled?:string}>}){
+ const {id}=await params;const query=await searchParams;if(id!=='demo'&&!validId(id))notFound();let scan=id==='demo'?demo:await getScan(id);if(!scan)notFound();const owner=owns(scan,(await cookies()).get(cookieName(id))?.value);
+ let paymentMessage='';if(query.session_id&&owner&&paymentsReady())try{const session=await stripe().checkout.sessions.retrieve(query.session_id);if(session.metadata?.scanId===id){await fulfill(session);scan=(await getScan(id))!;}}catch{paymentMessage='Your payment is still being verified. Refresh this page shortly; do not pay again.';}
+ const unlocked=scan.demo||(owner&&scan.paid);
+ return <main id="main" className="wrap full-page"><Link href={`/reports/${id}`} className="back-link">Back to summary</Link><p className="eyebrow">{unlocked?'EVIDENCE & NEXT STEPS':'ONE REPORT. ONE PAYMENT.'}</p><h1>{unlocked?'The details behind your score.':'Know what to fix. And why.'}</h1>{scan.demo&&<p className="demo-notice">SIMULATED SAMPLE · This preview is free. Evidence below is intentionally constructed.</p>}{paymentMessage&&<p role="status">{paymentMessage}</p>}{query.cancelled&&<p role="status">Checkout was cancelled. Your summary is still available.</p>}{unlocked?<><p className="scope-detail">{scan.scope}</p>{scan.checks.map(c=><article className="finding" key={c.id}><div className="finding-heading"><span className={`status-label ${c.pass?'pass':'fail'}`}>{c.pass?'PASS':'FAIL'}</span><h2>{c.title}</h2></div><h3>What we found</h3><p>{c.evidence}</p><h3>{c.pass?'Keep it that way':'Your next step'}</h3><p>{c.fix}</p></article>)}</>:<section className="paywall"><div className="paywall-copy"><span className="pill green">Your free summary stays free</span><h2>Less guessing.<br/>A clearer path to launch.</h2><ul><li>Observed evidence for every check</li><li>Practical remediation for each failure</li><li>Scope and limitations beside your results</li><li>Access in this browser for 30 days</li></ul><p>Shared links show only the free summary. Save the report link and keep this browser’s cookies to retain paid access.</p></div><div className="purchase-card"><p className="mono">FULL LAUNCH REPORT</p><p className="price">$9 <small>USD · one time</small></p>{scan.status!=='complete'?<p>Finish the scan before unlocking a report.</p>:!owner?<p>For private access, open this report in the browser that created it. Or <Link href="/">run your own scan</Link>.</p>:<Checkout id={id} available={paymentsReady()}/>}<p className="muted">Secure payment through Stripe when enabled. No subscription.</p></div></section>}</main>;
+}
