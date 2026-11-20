@@ -1,0 +1,55 @@
+{
+  "checkedAt": "2026-11-20T23:22:34.816Z",
+  "origin": "https://launchcheck-sayed.vercel.app",
+  "report": "https://launchcheck-sayed.vercel.app/reports/6cfc03e7186ea832762eb99748c2ee0a",
+  "score": 40,
+  "checks": [
+    {
+      "id": "copy",
+      "pass": true,
+      "title": "No unfinished launch copy in sampled code",
+      "weight": 20,
+      "category": "Content"
+    },
+    {
+      "id": "privacy",
+      "pass": true,
+      "title": "Privacy policy reachable",
+      "weight": 10,
+      "category": "Policies"
+    },
+    {
+      "id": "terms",
+      "pass": true,
+      "title": "Terms of use reachable",
+      "weight": 10,
+      "category": "Policies"
+    },
+    {
+      "id": "og-text",
+      "pass": false,
+      "title": "Social metadata declared",
+      "weight": 10,
+      "category": "Social"
+    },
+    {
+      "id": "og-image",
+      "pass": false,
+      "title": "Social image declared",
+      "weight": 10,
+      "category": "Social"
+    },
+    {
+      "id": "headers",
+      "pass": false,
+      "title": "Security headers declared",
+      "weight": 40,
+      "category": "Security"
+    }
+  ],
+  "elapsedMs": 6220,
+  "badge": 200,
+  "crossOrigin": 403,
+  "crossBrowserEvidenceDenied": true,
+  "pageErrors": []
+}

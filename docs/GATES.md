@@ -31,3 +31,5 @@ Narration verification: AAC audio mean -17.6 dB, peak -1.6 dB, with the syntheti
 GitHub Actions: [checks run 44835989417](https://github.com/SayedZahur786/launchcheck/actions/runs/44835989417) passed frozen install, all 14 tests, lint, production build and dependency audit on Node 22. This is a real successful hosted CI run.
 
 Final screenshot run: all eight main route states captured at 1440 px and 390 px, including a freshly scanned live summary and its actual paywall; completed in 6.1 seconds with no horizontal overflow.
+
+Final hosted repository smoke: Launchcheck's own public GitHub repository produced a bounded static report and reached its paywall in 6.220 seconds. Public JSON redaction, cross-browser private denial, badge delivery and origin checks passed. Its 40/100 source-sample score is not equivalent to the 100/100 deployed-URL check; this difference illustrates the documented runtime-verification limit. See production-repo-smoke.json.
