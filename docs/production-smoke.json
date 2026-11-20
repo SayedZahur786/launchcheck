@@ -1,0 +1,83 @@
+{
+  "checkedAt": "2026-11-20T23:16:42.950Z",
+  "origin": "https://launchcheck-sayed.vercel.app",
+  "report": "https://launchcheck-sayed.vercel.app/reports/304ccafcc01652c8546e0a113e4f0f1c",
+  "score": 100,
+  "checks": [
+    {
+      "id": "copy",
+      "pass": true,
+      "title": "No unfinished launch copy",
+      "weight": 20,
+      "category": "Content"
+    },
+    {
+      "id": "title",
+      "pass": true,
+      "title": "A useful page title",
+      "weight": 5,
+      "category": "Content"
+    },
+    {
+      "id": "csp",
+      "pass": true,
+      "title": "Restrictive content security policy",
+      "weight": 15,
+      "category": "Security"
+    },
+    {
+      "id": "hsts",
+      "pass": true,
+      "title": "HTTPS enforced with HSTS",
+      "weight": 10,
+      "category": "Security"
+    },
+    {
+      "id": "nosniff",
+      "pass": true,
+      "title": "MIME sniffing disabled",
+      "weight": 5,
+      "category": "Security"
+    },
+    {
+      "id": "framing",
+      "pass": true,
+      "title": "Embedding restricted",
+      "weight": 5,
+      "category": "Security"
+    },
+    {
+      "id": "privacy",
+      "pass": true,
+      "title": "Privacy policy reachable",
+      "weight": 10,
+      "category": "Policies"
+    },
+    {
+      "id": "terms",
+      "pass": true,
+      "title": "Terms of use reachable",
+      "weight": 10,
+      "category": "Policies"
+    },
+    {
+      "id": "og-text",
+      "pass": true,
+      "title": "Social title and description",
+      "weight": 10,
+      "category": "Social"
+    },
+    {
+      "id": "og-image",
+      "pass": true,
+      "title": "Social preview image loads",
+      "weight": 10,
+      "category": "Social"
+    }
+  ],
+  "elapsedMs": 6628,
+  "badge": 200,
+  "crossOrigin": 403,
+  "crossBrowserEvidenceDenied": true,
+  "pageErrors": []
+}

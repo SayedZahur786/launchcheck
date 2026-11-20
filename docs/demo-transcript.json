@@ -1,0 +1,44 @@
+[
+  {
+    "start": 0.178,
+    "duration": 2.732381,
+    "narration": "You’re one link away from launch. What did you miss?",
+    "caption": "One link away from launch.\nWhat did you miss?"
+  },
+  {
+    "start": 3.514,
+    "duration": 5.709252,
+    "narration": "Paste your public website. Launchcheck queues a real scan, with a forty five second time budget.",
+    "caption": "Paste a public URL.\nRun a real launch check."
+  },
+  {
+    "start": 13.741,
+    "duration": 5.251066,
+    "narration": "Get a score, and a pass or fail for every check. The report tells you exactly what was covered.",
+    "caption": "Your score. Every check.\nA clearly defined scope."
+  },
+  {
+    "start": 20.568,
+    "duration": 4.985351,
+    "narration": "Nine dollars unlocks evidence and next steps. Payments are not open yet in this preview.",
+    "caption": "Full report · $9 once\nPayments not open yet"
+  },
+  {
+    "start": 26.487,
+    "duration": 7.010794,
+    "narration": "This labeled sample shows the detail. Three failures were deliberately inserted. It is not a live assessment of Wikipedia.",
+    "caption": "Sample evidence, clearly labeled.\nThree intentional failures."
+  },
+  {
+    "start": 35.066,
+    "duration": 5.33873,
+    "narration": "Share the free summary, or copy a score badge for your readme. Private evidence stays private.",
+    "caption": "Share the summary.\nKeep paid evidence private."
+  },
+  {
+    "start": 41.056,
+    "duration": 3.731156,
+    "narration": "Launchcheck. A second pair of eyes, before your first visitor.",
+    "caption": "Launchcheck\nShip with fewer surprises."
+  }
+]

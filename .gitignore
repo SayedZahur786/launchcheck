@@ -7,3 +7,7 @@ test-results/
 playwright-report/
 *.tsbuildinfo
 .data/
+.neon
+.vercel
+
+skills-lock.json

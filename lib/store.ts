@@ -5,7 +5,7 @@ import type { Scan } from './types';
 type State={scans:Record<string,Scan>;purchases:Record<string,string>;limits:Record<string,number>};
 const dir=path.join(process.cwd(),'.data');
 let chain:Promise<unknown>=Promise.resolve();
-function sql(){if(!process.env.DATABASE_URL)throw new Error('Database is not configured.');return neon(process.env.DATABASE_URL);}
+function sql(){if(!process.env.DATABASE_URL)throw new Error('Database is not configured.');return neon(process.env.DATABASE_URL,{fetchOptions:{signal:AbortSignal.timeout(5000)}});}
 export function configured(){return !!process.env.DATABASE_URL||process.env.LOCAL_STORE==='1'&&!process.env.VERCEL;}
 function local(){return !process.env.DATABASE_URL&&process.env.LOCAL_STORE==='1'&&!process.env.VERCEL;}
 async function transact<T>(fn:(s:State)=>T):Promise<T>{

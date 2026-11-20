@@ -1,0 +1,2 @@
+import {test,expect} from '@playwright/test';
+test('public GitHub repository scan returns bounded source evidence',async({page})=>{await page.goto('/');await page.getByLabel('Your website or public GitHub repository').fill('https://github.com/vercel/next.js');await page.getByRole('button',{name:'Check my launch'}).click();await expect(page).toHaveURL(/\/reports\/[a-f0-9]{32}$/,{timeout:15000});await expect(page.getByRole('heading',{name:'Your launch checklist'})).toBeVisible({timeout:60000});await expect(page.getByText(/Static indicators only/)).toBeVisible();});

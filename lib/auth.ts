@@ -2,7 +2,7 @@ import { createHash,randomBytes,timingSafeEqual } from 'node:crypto';
 import type { Scan } from './types';
 export const newCapability=()=>randomBytes(32).toString('hex');
 export const hash=(s:string)=>createHash('sha256').update(s).digest('hex');
-export function owns(scan:Scan,token?:string){if(!token||!scan.ownerHash)return false;const a=Buffer.from(hash(token));const b=Buffer.from(scan.ownerHash);return a.length===b.length&&timingSafeEqual(a,b);}
+export function owns(scan:Scan,token?:string){if(!token||!scan.ownerHash||Date.now()-Date.parse(scan.createdAt)>30*24*60*60*1000)return false;const a=Buffer.from(hash(token));const b=Buffer.from(scan.ownerHash);return a.length===b.length&&timingSafeEqual(a,b);}
 export function cookieName(id:string){return `lc_${id}`;}
 export function validId(id:string){return /^[a-f0-9]{32}$/.test(id);}
 export function sameOrigin(request:Request){return request.headers.get('origin')===new URL(process.env.APP_URL||request.url).origin;}

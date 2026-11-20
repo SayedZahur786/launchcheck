@@ -1,0 +1,11 @@
+import {chromium} from '@playwright/test';
+import {writeFile} from 'node:fs/promises';
+const base='https://launchcheck-sayed.vercel.app';
+const browser=await chromium.launch();const context=await browser.newContext();const page=await context.newPage();const errors=[];page.on('pageerror',e=>errors.push(e.message));
+await page.goto(base);await page.getByLabel('Your website or public GitHub repository').fill(base);const start=Date.now();await page.getByRole('button',{name:'Check my launch'}).click();await page.waitForURL(/\/reports\/[a-f0-9]{32}$/,{timeout:15000});await page.getByRole('heading',{name:'Your launch checklist'}).waitFor({timeout:60000});const id=page.url().split('/').pop();
+const summary=await (await context.request.get(`${base}/api/scans/${id}`)).json();if(summary.checks.some(c=>'evidence' in c)||'ownerHash' in summary)throw Error('Private detail leak.');
+await page.getByRole('link',{name:'Unlock full report · $9'}).click();await page.getByRole('heading',{name:'Know what to fix. And why.'}).waitFor();
+const foreign=await browser.newContext();const other=await foreign.newPage();await other.goto(`${base}/reports/${id}/full`);await other.getByText('For private access, open this report in the browser that created it.').waitFor();await foreign.close();
+const badge=await context.request.get(`${base}/api/reports/${id}/badge`);if(badge.status()!==200)throw Error('Badge failed.');
+const denial=await context.request.post(`${base}/api/scans`,{headers:{origin:'https://attacker.invalid'},data:{target:base}});if(denial.status()!==403)throw Error('Origin denial failed.');
+const result={checkedAt:new Date().toISOString(),origin:base,report:`${base}/reports/${id}`,score:summary.score,checks:summary.checks,elapsedMs:Date.now()-start,badge:badge.status(),crossOrigin:denial.status(),crossBrowserEvidenceDenied:true,pageErrors:errors};await writeFile('docs/production-smoke.json',JSON.stringify(result,null,2));if(errors.length)throw Error('Browser errors observed.');await browser.close();console.log(JSON.stringify({score:summary.score,report:result.report,elapsedMs:result.elapsedMs,passed:true}));

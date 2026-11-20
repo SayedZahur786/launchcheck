@@ -8,8 +8,8 @@
     "start": "next start",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
-    "test": "node --import tsx --test tests/*.test.ts",
-    "test:e2e": "playwright test tests/flow.spec.ts",
+    "test": "node --import tsx --test --test-concurrency=1 tests/*.test.ts",
+    "test:e2e": "playwright test tests/flow.spec.ts tests/repo.spec.ts tests/security.spec.ts",
     "shots": "playwright test tests/shots.spec.ts",
     "db:migrate": "node --import tsx scripts/migrate.ts"
   },

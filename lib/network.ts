@@ -22,7 +22,7 @@ export async function safeFetch(input:string,deadline:number,limit=1_000_000,red
  const response=await new Promise<Fetched>((resolve,reject)=>{
   const req=https.get(u,{family:a.family,lookup:(_host,_options,cb)=>cb(null,a.address,a.family),headers:{'user-agent':'Launchcheck/1.0 (launch-readiness scan)','accept':'text/html,application/json,image/*;q=0.8','accept-encoding':'identity'}},res=>{
    const chunks:Buffer[]=[];let size=0;
-   res.on('data',(chunk:Buffer)=>{size+=chunk.length;if(size>limit){res.destroy();req.destroy(new Error('Response exceeds scan size limit.'));}else chunks.push(chunk);});
+   res.on('data',(chunk:Buffer)=>{size+=chunk.length;if(size>limit){reject(new Error('Response exceeds scan size limit.'));res.destroy();req.destroy();}else chunks.push(chunk);});
    res.on('error',reject);res.on('end',()=>resolve({url:u.href,status:res.statusCode||0,headers:Object.fromEntries(Object.entries(res.headers).map(([k,v])=>[k,Array.isArray(v)?v.join(', '):v||''])),body:Buffer.concat(chunks).toString('utf8')}));
   });
   const timer=setTimeout(()=>req.destroy(new Error('Destination timed out.')),Math.max(1,Math.min(7000,deadline-Date.now())));
